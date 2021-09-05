@@ -32,3 +32,14 @@ curl -L https://nixos.org/nix/install | sh
 ```sh
 curl https://dapp.tools/install | sh
 ```
+
+## DappTools Resources
+
+* [dapp.tools](https://dapp.tools/)
+    * [HEVM Docs](https://github.com/dapphub/dapptools/blob/master/src/hevm/README.md)
+    * [DappTools Docs](https://github.com/dapphub/dapptools/tree/master/src/dapp#readme)
+    * [Seth Docs](https://github.com/dapphub/dapptools/tree/master/src/seth#readme) & [Introduction to Seth](https://docs.makerdao.com/clis/seth)
+* [HEVM and Seth Cheatsheet](https://kndrck.co/posts/hevm_seth_cheatsheet/)
+* [Solmate](https://github.com/Rari-Capital/solmate/)
+* [Multi Collateral DAI](https://github.com/makerdao/dss)
+* [Smart Contract Development with dapp.tools](https://youtu.be/lPinWgaNceM) at EthDenver
