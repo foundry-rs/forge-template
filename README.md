@@ -39,6 +39,7 @@ curl https://dapp.tools/install | sh
     * [HEVM Docs](https://github.com/dapphub/dapptools/blob/master/src/hevm/README.md)
     * [DappTools Docs](https://github.com/dapphub/dapptools/tree/master/src/dapp#readme)
     * [Seth Docs](https://github.com/dapphub/dapptools/tree/master/src/seth#readme) & [Introduction to Seth](https://docs.makerdao.com/clis/seth)
+* [Symbolic Execution with ds-test](https://fv.ethereum.org/2020/12/11/symbolic-execution-with-ds-test/)
 * [HEVM and Seth Cheatsheet](https://kndrck.co/posts/hevm_seth_cheatsheet/)
 * [Solmate](https://github.com/Rari-Capital/solmate/)
 * [Multi Collateral DAI](https://github.com/makerdao/dss)
