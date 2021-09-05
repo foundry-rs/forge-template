@@ -1,18 +1,23 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+library Errors {
+    string constant InvalidBlockNumber = "invalid block number, please wait";
+    string constant CannotGm = "cannot greet with gm";
+}
+
 contract Greeter is Ownable {
     string public greeting;
-    address lastGreeter;
 
-    function gm() onlyOwner {
+    function gm() onlyOwner public {
+        require(block.number % 10 == 0, Errors.InvalidBlockNumber);
         greeting = "gm";
-        lastGreeter = msg.sender;
     }
 
-    function greet(string memory _greeting) {
+    function greet(string memory _greeting) public {
+        require(keccak256(abi.encodePacked(_greeting)) != keccak256("gm"), Errors.CannotGm);
         greeting = _greeting;
-        lastGreeter = msg.sender;
     }
 }

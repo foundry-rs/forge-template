@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
-
 pragma solidity ^0.8.0;
 import "ds-test/test.sol";
 
+import "../../Greeter.sol";
 import "./Hevm.sol";
 
-contract GreeterUser {
+contract User {
     Greeter internal greeter;
 
-    constructor (address greeter) {
-        greeter = Greeter(greeter);
+    constructor(address _greeter) {
+        greeter = Greeter(_greeter);
     }
 
-    function greet(string memory greeting) {
+    function greet(string memory greeting) public {
         greeter.greet(greeting);
     }
 
-    function gm() {
+    function gm() public {
         greeter.gm();
     }
 }
