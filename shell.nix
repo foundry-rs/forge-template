@@ -8,7 +8,7 @@ let
 in
   pkgs.mkShell {
     src = null;
-    name = "lootloose";
+    name = "dapptools-template";
     buildInputs = with pkgs; [
       pkgs.dapp
     ];
