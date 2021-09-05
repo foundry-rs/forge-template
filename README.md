@@ -44,3 +44,4 @@ curl https://dapp.tools/install | sh
 * [Solmate](https://github.com/Rari-Capital/solmate/)
 * [Multi Collateral DAI](https://github.com/makerdao/dss)
 * [Smart Contract Development with dapp.tools](https://youtu.be/lPinWgaNceM) at EthDenver
+* [DappTools Overview](https://youtu.be/rKQCvUp5q1w) at Devcon 3
