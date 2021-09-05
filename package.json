@@ -1,7 +1,6 @@
 {
   "name": "dapptools-template",
   "author": "Georgios Konstantopoulos",
-  "license": "GPL-3.0-or-later",
   "version": "1.0.0",
   "description": "A template for building dapptools projects",
   "files": [
