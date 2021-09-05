@@ -27,7 +27,7 @@ curl -L https://nixos.org/nix/install | sh
 . "$HOME/.nix-profile/etc/profile.d/nix.sh"
 ```
 
-### Install DAppTools
+### Install DappTools
 
 ```sh
 curl https://dapp.tools/install | sh
