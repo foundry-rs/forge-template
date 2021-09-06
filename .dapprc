@@ -8,6 +8,9 @@ export DAPP_LINK_TEST_LIBRARIES=0
 export DAPP_TEST_VERBOSITY=1
 export DAPP_TEST_SMTTIMEOUT=500000
 
+# set so that we can deploy to local node w/o hosted private keys
+export ETH_RPC_ACCOUNTS=true
+
 if [ "$DEEP_FUZZ" == "true" ]
 then 
   export DAPP_TEST_FUZZ_RUNS=50000 # Fuzz for a long time if DEEP_FUZZ is set to true.
