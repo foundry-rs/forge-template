@@ -24,3 +24,5 @@ sleep 1
 # should be set afterwards
 greeting=$(seth call $addr 'greeting()(string)')
 [[ $greeting = "yo" ]] || error
+
+echo "Success."
