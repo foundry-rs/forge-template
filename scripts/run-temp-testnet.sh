@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Utility for running a temporary dapp testnet w/ an ephemeral account
 # to be used for deployment tests
 
