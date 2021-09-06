@@ -1,5 +1,4 @@
-# bring up the network
-. $(dirname $0)/run-temp-testnet.sh
+# bring up the network. $(dirname $0)/run-temp-testnet.sh
 
 # run the deploy script
 . $(dirname $0)/deploy.sh
@@ -10,8 +9,6 @@ addr=$(jq -r '.Greeter' out/addresses.json)
 # the initial greeting must be empty
 greeting=$(seth call $addr 'greeting()(string)')
 [[ $greeting = "" ]] || error
-
-# TODO: A bit annoying that we need to have quotes twice here.
 
 # set it to a value
 seth send $addr \
