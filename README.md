@@ -93,3 +93,4 @@ curl https://dapp.tools/install | sh
 * [Multi Collateral DAI](https://github.com/makerdao/dss)
 * [Smart Contract Development with dapp.tools](https://youtu.be/lPinWgaNceM) at EthDenver
 * [DappTools Overview](https://youtu.be/rKQCvUp5q1w) at Devcon 3
+* [5-part video introduction](https://www.youtube.com/playlist?list=PLYSZ-f9LCH3sEf0UKTLCaZErJeQtK7GCD)
