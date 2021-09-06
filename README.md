@@ -12,6 +12,51 @@ cd dapptools-template
 make
 make test
 ```
+
+## Deploying
+
+Contracts can be deployed via the `make deploy` command. Addresses are automatically
+written in a name-address json file stored under `out/addresses.json`.
+
+Environment variables under the `.env` file are automatically loaded (see [`.env.example`](./.env.example)).
+Be careful of the [precedence in which env vars are read](https://github.com/dapphub/dapptools/tree/2cf441052489625f8635bc69eb4842f0124f08e4/src/dapp#precedence).
+
+We assume `ETH_FROM` is an address you own and is part of your keystore.
+If not, use `ethsign import` to import your private key.
+
+See the [`Makefile`](./Makefile#25) for more context on how this works under the hood
+
+We use Alchemy as a remote node provider for the Mainnet & Rinkeby network deployments.
+You must have set your API key as the `API_KEY` envirnoment variable in order to
+deploy to these networks
+
+### Mainnet
+
+```
+ETH_FROM=0x3538b6eF447f244268BCb2A0E1796fEE7c45002D make deploy-mainnet
+```
+
+### Rinkeby
+
+```
+ETH_FROM=0x3538b6eF447f244268BCb2A0E1796fEE7c45002D make deploy-rinkeby
+```
+
+### Custom Network
+
+```
+ETH_RPC_URL=<your network> make deploy
+```
+
+### Local Testnet
+
+```
+# on one terminal
+dapp testnet
+# get the printed account address from the testnet, and set it as ETH_FROM. Then:
+make deploy
+```
+
 ## Installing the toolkit
 
 If you do not have DappTools already installed, you'll need to run the below
