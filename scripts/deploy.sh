@@ -1,13 +1,5 @@
-# import helpers
-# TODO: Can we make this import work from any directory?
-. ./scripts/common.sh
-
-# Setup addresses file
-cat > "$ADDRESSES_FILE" <<EOF
-{
-    "DEPLOYER": "$(seth --to-checksum-address "$ETH_FROM")"
-}
-EOF
+# import the deployment helpers
+. $(dirname $0)/common.sh
 
 # Deploy.
 GreeterAddr=$(deploy Greeter)

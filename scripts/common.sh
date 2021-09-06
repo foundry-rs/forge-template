@@ -1,13 +1,6 @@
-# ensure ETH_FROM is set and give a meaningful error message
-if [[ -z ${ETH_FROM} ]]; then
-    echo "ETH_FROM not found, please set it and re-run the last command."
-    exit 1
-fi
-
 # All contracts are output to `out/addresses.json` by default
 OUT_DIR=${OUT_DIR:-$PWD/out}
 ADDRESSES_FILE=${ADDRESSES_FILE:-$OUT_DIR/"addresses.json"}
-
 # default to localhost rpc
 ETH_RPC_URL=${ETH_RPC_URL:-http://localhost:8545}
 
@@ -18,6 +11,19 @@ log() {
     printf '%b\n' "${GREEN}${*}${NC}"
     echo ""
 }
+
+# ensure ETH_FROM is set and give a meaningful error message
+if [[ -z ${ETH_FROM} ]]; then
+    echo "ETH_FROM not found, please set it and re-run the last command."
+    exit 1
+fi
+
+# Setup addresses file
+cat > "$ADDRESSES_FILE" <<EOF
+{
+    "DEPLOYER": "$(seth --to-checksum-address "$ETH_FROM")"
+}
+EOF
 
 # Call as `ETH_FROM=0x... ETH_RPC_URL=<url> deploy ContractName arg1 arg2 arg3`
 # (or omit the env vars if you have already set them)
