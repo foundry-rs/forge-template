@@ -1,6 +1,10 @@
-name: Tests
+on:
+  push:
+    branches: 
+      - master
+  pull_request:
 
-on: [push, pull_request]
+name: Tests
 
 jobs:
   tests:
@@ -22,3 +26,23 @@ jobs:
         # Enable this if using forking tests
         # env:
         #  ETH_RPC_URL: https://eth-mainnet.alchemyapi.io/v2/${{ secrets.ALCHEMY_API_KEY }}
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - uses: cachix/install-nix-action@v13
+      - uses: cachix/cachix-action@v10
+        with:
+          name: dapp
+
+      - name: Install dependencies
+        run: nix-shell --run 'make'
+
+      - name: Build the contracts
+        run: nix-shell --run 'make build'
+
+      - name: Deploy and run checks
+        run: nix-shell --run './scripts/test-deploy.sh'

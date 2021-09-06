@@ -18,6 +18,9 @@ make test
 Contracts can be deployed via the `make deploy` command. Addresses are automatically
 written in a name-address json file stored under `out/addresses.json`.
 
+We recommend testing your deployments and provide an example under [`scripts/test-deploy.sh`](./scripts/test-deploy.sh)
+which will launch a local testnet, deploy the contracts, and do some sanity checks.
+
 Environment variables under the `.env` file are automatically loaded (see [`.env.example`](./.env.example)).
 Be careful of the [precedence in which env vars are read](https://github.com/dapphub/dapptools/tree/2cf441052489625f8635bc69eb4842f0124f08e4/src/dapp#precedence).
 

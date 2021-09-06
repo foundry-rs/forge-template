@@ -11,5 +11,8 @@ in
     name = "dapptools-template";
     buildInputs = with pkgs; [
       pkgs.dapp
+      pkgs.seth
+      pkgs.go-ethereum-unlimited
+      pkgs.hevm
     ];
   }
