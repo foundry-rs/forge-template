@@ -7,6 +7,8 @@ export DAPP_BUILD_OPTIMIZE_RUNS=1000000
 export DAPP_LINK_TEST_LIBRARIES=0
 export DAPP_TEST_VERBOSITY=1
 export DAPP_TEST_SMTTIMEOUT=500000
+# random default block.timestamp for testing
+export DAPP_TIMESTAMP=1438269988
 
 # set so that we can deploy to local node w/o hosted private keys
 export ETH_RPC_ACCOUNTS=true
