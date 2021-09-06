@@ -3,6 +3,9 @@
 # Utility for running a temporary dapp testnet w/ an ephemeral account
 # to be used for deployment tests
 
+# make a temp dir to store testnet info
+export TMPDIR=$(mktemp -d)
+
 # clean up
 trap 'killall geth && rm -rf "$TMPDIR"' EXIT
 trap "exit 1" SIGINT SIGTERM
@@ -14,8 +17,7 @@ error() {
     exit 1
 }
 
-# launch a testnet at a temp dir
-export TMPDIR=$(mktemp -d)
+# launch the testnet
 dapp testnet --dir "$TMPDIR" &
 # wait for it to launch (can't go <3s)
 sleep 3
