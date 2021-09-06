@@ -27,7 +27,7 @@ If not, use `ethsign import` to import your private key.
 See the [`Makefile`](./Makefile#25) for more context on how this works under the hood
 
 We use Alchemy as a remote node provider for the Mainnet & Rinkeby network deployments.
-You must have set your API key as the `API_KEY` envirnoment variable in order to
+You must have set your API key as the `ALCHEMY_API_KEY` enviroment variable in order to
 deploy to these networks
 
 ### Mainnet
