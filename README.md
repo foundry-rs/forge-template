@@ -83,13 +83,9 @@ curl https://dapp.tools/install | sh
 
 ## DappTools Resources
 
-* [dapp.tools](https://dapp.tools/)
-    * [HEVM Docs](https://github.com/dapphub/dapptools/blob/master/src/hevm/README.md)
-    * [DappTools Docs](https://github.com/dapphub/dapptools/tree/master/src/dapp#readme)
-    * [Seth Docs](https://github.com/dapphub/dapptools/tree/master/src/seth#readme) & [Introduction to Seth](https://docs.makerdao.com/clis/seth)
-* [Symbolic Execution with ds-test](https://fv.ethereum.org/2020/12/11/symbolic-execution-with-ds-test/)
-* [HEVM and Seth Cheatsheet](https://kndrck.co/posts/hevm_seth_cheatsheet/)
-* [Solmate](https://github.com/Rari-Capital/solmate/)
-* [Multi Collateral DAI](https://github.com/makerdao/dss)
-* [Smart Contract Development with dapp.tools](https://youtu.be/lPinWgaNceM) at EthDenver
-* [DappTools Overview](https://youtu.be/rKQCvUp5q1w) at Devcon 3
+* [DappTools](https://dapp.tools)
+    * [Hevm Docs](https://github.com/dapphub/dapptools/blob/master/src/hevm/README.md)
+    * [Dapp Docs](https://github.com/dapphub/dapptools/tree/master/src/dapp/README.md)
+    * [Seth Docs](https://github.com/dapphub/dapptools/tree/master/src/seth/README.md)
+* [DappTools Overview](https://www.youtube.com/watch?v=lPinWgaNceM)
+* [Awesome-DappTools](https://github.com/rajivpo/awesome-dapptools)
