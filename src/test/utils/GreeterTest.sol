@@ -23,7 +23,7 @@ contract User {
 
 contract GreeterTest is DSTest {
     Hevm internal constant hevm =
-        Hevm(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+        Hevm(HEVM_ADDRESS);
 
     // contracts
     Greeter internal greeter;
