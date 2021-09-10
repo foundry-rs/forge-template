@@ -14,6 +14,20 @@ log() {
     echo ""
 }
 
+# Coloured output helpers
+if command -v tput > /dev/null 2>&1; then
+  if [ $(($(tput colors 2> /dev/null))) -ge 8 ]; then
+    # Enable colors
+    TPUT_RESET="$(tput sgr 0)"
+    TPUT_YELLOW="$(tput setaf 3)"
+    TPUT_RED="$(tput setaf 1)"
+    TPUT_BLUE="$(tput setaf 4)"
+    TPUT_GREEN="$(tput setaf 2)"
+    TPUT_WHITE="$(tput setaf 7)"
+    TPUT_BOLD="$(tput bold)"
+  fi
+fi
+
 # ensure ETH_FROM is set and give a meaningful error message
 if [[ -z ${ETH_FROM} ]]; then
     echo "ETH_FROM not found, please set it and re-run the last command."
