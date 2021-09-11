@@ -21,7 +21,7 @@ test   :; dapp test # --ffi # enable if you need the `ffi` cheat code on HEVM
 clean  :; dapp clean
 lint   :; yarn run lint
 estimate :; ./scripts/estimate-gas.sh ${contract}
-
+size   :; ./scripts/contract-size.sh ${contract}
 
 # Deployment helpers
 deploy :; @./scripts/deploy.sh
