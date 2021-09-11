@@ -115,7 +115,7 @@ estimate_gas() {
      size=$(contract_size $NAME)
      echo "Estimated Gas cost for deployment of $NAME: ${TPUT_BOLD}$GAS${TPUT_RESET} units of gas"
      echo "Contract Size: ${size} bytes"
-     echo "Total cost for deployment:"
+      echo "Total cost for deployment:"
      rapid_cost=$(echo "scale=5; $GAS*$rapid/1000000000" | bc)
      fast_cost=$(echo "scale=5; $GAS*$fast/1000000000" | bc)
      standard_cost=$(echo "scale=5; $GAS*$standard/1000000000" | bc)
@@ -143,4 +143,3 @@ contract_size(){
     length=$(echo $BYTECODE | wc -m )
     echo $(( $length / 2 ))
 }
-
