@@ -14,6 +14,20 @@ log() {
     echo ""
 }
 
+# Coloured output helpers
+if command -v tput > /dev/null 2>&1; then
+  if [ $(($(tput colors 2> /dev/null))) -ge 8 ]; then
+    # Enable colors
+    TPUT_RESET="$(tput sgr 0)"
+    TPUT_YELLOW="$(tput setaf 3)"
+    TPUT_RED="$(tput setaf 1)"
+    TPUT_BLUE="$(tput setaf 4)"
+    TPUT_GREEN="$(tput setaf 2)"
+    TPUT_WHITE="$(tput setaf 7)"
+    TPUT_BOLD="$(tput bold)"
+  fi
+fi
+
 # ensure ETH_FROM is set and give a meaningful error message
 if [[ -z ${ETH_FROM} ]]; then
     echo "ETH_FROM not found, please set it and re-run the last command."
@@ -66,3 +80,49 @@ saveContract() {
     result=$(cat $ADDRESSES_FILE | jq -r ". + {\"$1\": \"$2\"}")
     printf %s "$result" > "$ADDRESSES_FILE"
 }
+
+estimate_gas() {
+    NAME=$1
+    ARGS=${@:2}
+    # select the filename and the contract in it
+    PATTERN=".contracts[\"src/$NAME.sol\"].$NAME"
+
+    # get the constructor's signature
+    ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
+    SIG=$(echo $ABI | seth --abi-constructor)
+
+    # get the bytecode from the compiled file
+    BYTECODE=0x$(jq -r "$PATTERN.evm.bytecode.object" out/dapp.sol.json)
+    # estimate gas
+    GAS=$(seth estimate --create $BYTECODE $SIG $ARGS --rpc-url $ETH_RPC_URL)
+
+    GASNOW_RESPONSE=$(curl -s https://www.gasnow.org/api/v3/gas/price)
+    response=$(jq '.code' <<< $GASNOW_RESPONSE)
+    if [[ $response != "200" ]]; then
+      echo "Could not get gas information from ${TPUT_BOLD}gasnow.org${TPUT_RESET}: https://www.gasnow.org"
+      echo "response code: $response"
+   else
+     rapid=$(( $(jq '.data.rapid' <<< $GASNOW_RESPONSE) / 1000000000 ))
+     fast=$(( $(jq '.data.fast' <<< $GASNOW_RESPONSE) / 1000000000 ))
+     standard=$(( $(jq '.data.standard' <<< $GASNOW_RESPONSE) / 1000000000 ))
+     slow=$(( $(jq '.data.slow' <<< $GASNOW_RESPONSE) / 1000000000 ))
+     echo "Gas prices from ${TPUT_BOLD}gasnow.org${TPUT_RESET}: https://www.gasnow.org"
+     echo " \
+     ${TPUT_RED}Rapid: $rapid gwei ${TPUT_RESET} \n
+     ${TPUT_YELLOW}Fast: $fast gwei \n
+     ${TPUT_BLUE}Standard: $standard gwei \n
+     ${TPUT_GREEN}Slow: $slow gwei${TPUT_RESET}" | column -t
+     echo "Estimated Gas cost for deployment of $NAME: ${TPUT_BOLD}$GAS${TPUT_RESET} units of gas"
+     echo "Total cost for deployment:"
+     rapid_cost=$(echo "scale=5; $GAS*$rapid/1000000000" | bc)
+     fast_cost=$(echo "scale=5; $GAS*$fast/1000000000" | bc)
+     standard_cost=$(echo "scale=5; $GAS*$standard/1000000000" | bc)
+     slow_cost=$(echo "scale=5; $GAS*$slow/1000000000" | bc)
+     echo " \
+     ${TPUT_RED}Rapid: $rapid_cost ETH ${TPUT_RESET} \n
+     ${TPUT_YELLOW}Fast: $fast_cost ETH \n
+     ${TPUT_BLUE}Standard: $standard_cost ETH \n
+     ${TPUT_GREEN}Slow: $slow_cost ETH ${TPUT_RESET}" | column -t
+  fi
+}
+
