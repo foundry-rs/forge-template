@@ -12,5 +12,3 @@ contract_size=$(contract_size ${contract})
 echo "Contract Name: ${contract}"
 echo "Contract Size: ${contract_size} bytes"
 echo "$(( 24576 - ${contract_size} )) bytes left to reach the smart contract size limit of 24576 bytes."
-
-
