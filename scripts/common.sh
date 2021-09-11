@@ -134,10 +134,6 @@ contract_size(){
     # select the filename and the contract in it
     PATTERN=".contracts[\"src/$NAME.sol\"].$NAME"
 
-    # get the constructor's signature
-    ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
-    SIG=$(echo $ABI | seth --abi-constructor)
-
     # get the bytecode from the compiled file
     BYTECODE=0x$(jq -r "$PATTERN.evm.bytecode.object" out/dapp.sol.json)
     length=$(echo $BYTECODE | wc -m )
