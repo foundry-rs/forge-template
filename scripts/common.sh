@@ -34,10 +34,16 @@ if [[ -z ${ETH_FROM} ]]; then
     exit 1
 fi
 
+# Make sure address is checksummed
+if [ $ETH_FROM != $(seth --to-checksum-address $ETH_FROM) ]; then
+    echo "ETH_FROM not checksummed, please format it with 'seth --to-checksum-address <address>'"
+    exit 1
+fi
+
 # Setup addresses file
 cat > "$ADDRESSES_FILE" <<EOF
 {
-    "DEPLOYER": "$(seth --to-checksum-address "$ETH_FROM")"
+    "DEPLOYER": "$ETH_FROM"
 }
 EOF
 
