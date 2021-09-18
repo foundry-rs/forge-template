@@ -6,7 +6,7 @@ set -eo pipefail
 
 if [[ -z $contract ]]; then
   if [[ -z ${1} ]];then
-    echo '"$contract" env variable is not set. Set it to the name of the contract you want to estimate gas cost for.'
+    echo '"$contract" env variable is not set. Set it to the name of the contract you want to estimate size for.'
     exit 1
   else
     contract=${1}
