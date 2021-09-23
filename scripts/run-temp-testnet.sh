@@ -9,7 +9,7 @@ set -eo pipefail
 export TMPDIR=$(mktemp -d)
 
 # clean up
-trap 'killall geth && rm -rf "$TMPDIR"' EXIT
+trap 'killall geth && sleep 3 && rm -rf "$TMPDIR"' EXIT
 trap "exit 1" SIGINT SIGTERM
 
 # test helper
