@@ -21,7 +21,10 @@
     "prepack": "yarn prepublishOnly",
     "postpack": "yarn postpublish",
     "lint": "yarn prettier && yarn solhint",
+    "lint:check": "yarn prettier:check && yarn solhint:check",
     "prettier": "prettier --write \"src/**/*.sol\"",
-    "solhint": "solhint --config ./.solhint.json --max-warnings 0 \"src/**/*.sol\""
+    "prettier:check": "prettier --check \"src/**/*.sol\"",
+    "solhint": "solhint --fix --config ./.solhint.json \"src/**/*.sol\"",
+    "solhint:check": "solhint --config ./.solhint.json \"src/**/*.sol\""
   }
 }
