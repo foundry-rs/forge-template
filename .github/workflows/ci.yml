@@ -20,6 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: nix-shell --run 'make'
+        
+      - name: Check contracts are linted
+        run: yarn lint:check
 
       - name: Run tests
         run: nix-shell --run 'make test'
