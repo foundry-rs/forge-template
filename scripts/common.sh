@@ -41,7 +41,7 @@ if [[ -z ${ETH_FROM} ]]; then
 fi
 
 # Make sure address is checksummed
-if [ $ETH_FROM != $(seth --to-checksum-address $ETH_FROM) ]; then
+if [ "$ETH_FROM" != "$(seth --to-checksum-address "$ETH_FROM")" ]; then
     echo "ETH_FROM not checksummed, please format it with 'seth --to-checksum-address <address>'"
     exit 1
 fi
@@ -63,23 +63,23 @@ deploy() {
 
     # get the constructor's signature
     ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
-    SIG=$(echo $ABI | seth --abi-constructor)
+    SIG=$(echo "$ABI" | seth --abi-constructor)
 
     # get the bytecode from the compiled file
     BYTECODE=0x$(jq -r "$PATTERN.evm.bytecode.object" out/dapp.sol.json)
 
     # estimate gas
-    GAS=$(seth estimate --create $BYTECODE $SIG $ARGS --rpc-url $ETH_RPC_URL)
+    GAS=$(seth estimate --create "$BYTECODE" "$SIG" $ARGS --rpc-url "$ETH_RPC_URL")
 
     # deploy
-    ADDRESS=$(dapp create $NAME $ARGS -- --gas $GAS --rpc-url $ETH_RPC_URL)
+    ADDRESS=$(dapp create "$NAME" $ARGS -- --gas "$GAS" --rpc-url "$ETH_RPC_URL")
 
     # save the addrs to the json
     # TODO: It'd be nice if we could evolve this into a minimal versioning system
     # e.g. via commit / chainid etc.
-    saveContract $NAME $ADDRESS
+    saveContract "$NAME" "$ADDRESS"
 
-    echo $ADDRESS
+    echo "$ADDRESS"
 }
 
 # Call as `saveContract ContractName 0xYourAddress` to store the contract name
@@ -87,9 +87,9 @@ deploy() {
 saveContract() {
     # create an empty json if it does not exist
     if [[ ! -e $ADDRESSES_FILE ]]; then
-        echo "{}" > $ADDRESSES_FILE
+        echo "{}" > "$ADDRESSES_FILE"
     fi
-    result=$(cat $ADDRESSES_FILE | jq -r ". + {\"$1\": \"$2\"}")
+    result=$(cat "$ADDRESSES_FILE" | jq -r ". + {\"$1\": \"$2\"}")
     printf %s "$result" > "$ADDRESSES_FILE"
 }
 
@@ -101,37 +101,38 @@ estimate_gas() {
 
     # get the constructor's signature
     ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
-    SIG=$(echo $ABI | seth --abi-constructor)
+    SIG=$(echo "$ABI" | seth --abi-constructor)
 
     # get the bytecode from the compiled file
     BYTECODE=0x$(jq -r "$PATTERN.evm.bytecode.object" out/dapp.sol.json)
     # estimate gas
-    GAS=$(seth estimate --create $BYTECODE $SIG $ARGS --rpc-url $ETH_RPC_URL)
+    GAS=$(seth estimate --create "$BYTECODE" "$SIG" $ARGS --rpc-url "$ETH_RPC_URL")
 
-    GASNOW_RESPONSE=$(curl -s https://www.gasnow.org/api/v3/gas/price)
-    response=$(jq '.code' <<< $GASNOW_RESPONSE)
+    TXPRICE_RESPONSE=$(curl -sL https://api.txprice.com/v1)
+    response=$(jq '.code' <<< "$TXPRICE_RESPONSE")
     if [[ $response != "200" ]]; then
-      echo "Could not get gas information from ${TPUT_BOLD}gasnow.org${TPUT_RESET}: https://www.gasnow.org"
+      echo "Could not get gas information from ${TPUT_BOLD}txprice.com${TPUT_RESET}: https://api.txprice.com/v1"
       echo "response code: $response"
    else
-     rapid=$(( $(jq '.data.rapid' <<< $GASNOW_RESPONSE) / 1000000000 ))
-     fast=$(( $(jq '.data.fast' <<< $GASNOW_RESPONSE) / 1000000000 ))
-     standard=$(( $(jq '.data.standard' <<< $GASNOW_RESPONSE) / 1000000000 ))
-     slow=$(( $(jq '.data.slow' <<< $GASNOW_RESPONSE) / 1000000000 ))
-     echo "Gas prices from ${TPUT_BOLD}gasnow.org${TPUT_RESET}: https://www.gasnow.org"
+     rapid=$(( $(jq '.blockPrices[0].estimatedPrices[0].maxFeePerGas' <<< "$TXPRICE_RESPONSE") ))
+     fast=$(( $(jq '.blockPrices[0].estimatedPrices[1].maxFeePerGas' <<< "$TXPRICE_RESPONSE") ))
+     standard=$(( $(jq '.blockPrices[0].estimatedPrices[2].maxFeePerGas' <<< "$TXPRICE_RESPONSE") ))
+     slow=$(( $(jq '.blockPrices[0].estimatedPrices[3].maxFeePerGas' <<< "$TXPRICE_RESPONSE") ))
+     basefee$(( $(jq '.blockPrices[0].baseFeePerGas' <<< "$TXPRICE_RESPONSE") ))
+     echo "Gas prices from ${TPUT_BOLD}txprice.com${TPUT_RESET}: https://api.txprice.com/v1"
      echo " \
      ${TPUT_RED}Rapid: $rapid gwei ${TPUT_RESET} \n
      ${TPUT_YELLOW}Fast: $fast gwei \n
      ${TPUT_BLUE}Standard: $standard gwei \n
      ${TPUT_GREEN}Slow: $slow gwei${TPUT_RESET}" | column -t
-     size=$(contract_size $NAME)
+     size=$(contract_size "$NAME")
      echo "Estimated Gas cost for deployment of $NAME: ${TPUT_BOLD}$GAS${TPUT_RESET} units of gas"
      echo "Contract Size: ${size} bytes"
      echo "Total cost for deployment:"
-     rapid_cost=$(echo "scale=5; $GAS*$rapid/1000000000" | bc)
-     fast_cost=$(echo "scale=5; $GAS*$fast/1000000000" | bc)
-     standard_cost=$(echo "scale=5; $GAS*$standard/1000000000" | bc)
-     slow_cost=$(echo "scale=5; $GAS*$slow/1000000000" | bc)
+     rapid_cost=$(echo "scale=5; $GAS*$rapid" | bc)
+     fast_cost=$(echo "scale=5; $GAS*$fast" | bc)
+     standard_cost=$(echo "scale=5; $GAS*$standard" | bc)
+     slow_cost=$(echo "scale=5; $GAS*$slow" | bc)
      echo " \
      ${TPUT_RED}Rapid: $rapid_cost ETH ${TPUT_RESET} \n
      ${TPUT_YELLOW}Fast: $fast_cost ETH \n
@@ -148,6 +149,6 @@ contract_size(){
 
     # get the bytecode from the compiled file
     BYTECODE=0x$(jq -r "$PATTERN.evm.bytecode.object" out/dapp.sol.json)
-    length=$(echo $BYTECODE | wc -m )
+    length=$(echo "$BYTECODE" | wc -m )
     echo $(( $length / 2 ))
 }
