@@ -7,7 +7,7 @@
 ## Building and testing
 
 ```sh
-git clone https://github.com/gakonst/dapptools-template
+git clone --recursive https://github.com/gakonst/dapptools-template
 cd dapptools-template
 make
 make test
