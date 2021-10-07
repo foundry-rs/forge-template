@@ -21,7 +21,7 @@ contract User {
     }
 }
 
-contract GreeterTest is DSTest {
+abstract contract GreeterTest is DSTest {
     Hevm internal constant hevm = Hevm(HEVM_ADDRESS);
 
     // contracts
