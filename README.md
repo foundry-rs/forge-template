@@ -9,7 +9,7 @@
 ```sh
 git clone https://github.com/gakonst/dapptools-template
 cd dapptools-template
-make
+make # This installs the project's dependencies.
 make test
 ```
 
