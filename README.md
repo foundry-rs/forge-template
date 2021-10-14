@@ -60,6 +60,17 @@ dapp testnet
 make deploy
 ```
 
+### Verifying on Etherscan
+
+After deploying your contract you can verify it on Etherscan using:
+
+```
+ETHERSCAN_API_KEY=<api-key> contract_address=<address> network_name=<mainnet|rinkeby|...> make verify
+```
+
+Check out the [dapp documentation](https://github.com/dapphub/dapptools/tree/master/src/dapp#dapp-verify-contract) to see how
+verifying contracts work with DappTools.
+
 ## Installing the toolkit
 
 If you do not have DappTools already installed, you'll need to run the below
