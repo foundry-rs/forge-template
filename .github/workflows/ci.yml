@@ -6,12 +6,24 @@ on:
 
 name: Tests
 
+defaults:
+  run:
+    shell: bash
+      
+env:
+  CI: true
+  FORCE_COLOR: 2
+
+
 jobs:
   tests:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+        with:
+           submodules: recursive
+
       - uses: actions/setup-node@v2
       - uses: cachix/install-nix-action@v13
       - uses: cachix/cachix-action@v10
@@ -22,9 +34,11 @@ jobs:
         run: nix-shell --run 'make'
         
       - name: Check contracts are linted
+        id: lint-check
         run: yarn lint:check
 
       - name: Run tests
+        id: tests-run
         run: nix-shell --run 'make test'
         # Enable this if using forking tests
         # env:
@@ -35,6 +49,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+           submodules: recursive
       - uses: actions/setup-node@v2
       - uses: cachix/install-nix-action@v13
       - uses: cachix/cachix-action@v10
@@ -42,10 +58,13 @@ jobs:
           name: dapp
 
       - name: Install dependencies
+        id: make-dependencies
         run: nix-shell --run 'make'
 
       - name: Build the contracts
+        id: make-build
         run: nix-shell --run 'make build'
 
       - name: Deploy and run checks
+        id: test-deploy
         run: nix-shell --run './scripts/test-deploy.sh'
