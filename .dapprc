@@ -9,7 +9,7 @@ export DAPP_TEST_SMTTIMEOUT=500000
 # Optimize your contracts before deploying to reduce runtime execution costs.
 # Check out the docs to learn more: https://docs.soliditylang.org/en/v0.8.9/using-the-compiler.html#optimizer-options
 # export DAPP_BUILD_OPTIMIZE=1
-# export DAPP_BUILD_OPTIMIZE_RUNS=10000
+# export DAPP_BUILD_OPTIMIZE_RUNS=1000000
 
 # set so that we can deploy to local node w/o hosted private keys
 export ETH_RPC_ACCOUNTS=true
