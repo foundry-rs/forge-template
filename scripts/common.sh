@@ -59,15 +59,12 @@ deploy() {
 	NAME=$1
 	ARGS=${@:2}
 
+    # find file path
     CONTRACT_PATH=$(find -name $NAME.sol)
     CONTRACT_PATH=${CONTRACT_PATH:2}
 
-    echo "PATH: $CONTRACT_PATH"
-
 	# select the filename and the contract in it
 	PATTERN=".contracts[\"$CONTRACT_PATH\"].$NAME"
-
-    echo "PATTERN: $PATTERN"
 
 	# get the constructor's signature
 	ABI=$(jq -r "$PATTERN.abi" out/dapp.sol.json)
