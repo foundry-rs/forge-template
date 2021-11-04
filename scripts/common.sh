@@ -59,7 +59,7 @@ deploy() {
 	NAME=$1
 	ARGS=${@:2}
 
-    # find file path
+	# find file path
 	CONTRACT_PATH=$(find -name $NAME.sol)
 	CONTRACT_PATH=${CONTRACT_PATH:2}
 
