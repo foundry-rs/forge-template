@@ -24,5 +24,8 @@ dapp testnet --dir "$TMPDIR" &
 # wait for it to launch (can't go <3s)
 sleep 3
 
+# set the RPC URL to the local testnet
+export ETH_RPC_URL=http://127.0.0.1:8545
+
 # get the created account (it's unlocked so we only need to set the address)
 export ETH_FROM=$(seth ls --keystore $TMPDIR/8545/keystore | cut -f1)
