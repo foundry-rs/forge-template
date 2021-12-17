@@ -1,0 +1,9 @@
+# Node
+node_modules
+
+# libraries
+lib/
+
+# Dapptools
+out/
+.env

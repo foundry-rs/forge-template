@@ -1,0 +1,17 @@
+{
+  "endOfLine": "auto",
+  "printWidth": 80,
+  "singleQuote": false,
+  "bracketSpacing": true,
+  "tabWidth": 2,
+
+  "overrides": [
+    {
+      "files": "*.sol",
+      "options": {
+        "tabWidth": 4,
+        "explicitTypes": "always"
+      }
+    }
+  ]
+}
