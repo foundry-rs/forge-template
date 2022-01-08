@@ -16,7 +16,11 @@ make test
 ## Deploying
 
 Contracts can be deployed via the `make deploy` command. Addresses are automatically
-written in a name-address json file stored under `out/addresses.json`.
+written in a name-address json file stored under `out/addresses.json`. Additionally, you can specify a specific network with `make deploy-rinkeby` or `make deploy-mainnet`. You can choose which contract you want to deploy, by adding it as a variable, like so:
+
+```bash
+make deploy-rinkeby CONTRACT=Greeter 
+```
 
 We recommend testing your deployments and provide an example under [`scripts/test-deploy.sh`](./scripts/test-deploy.sh)
 which will launch a local testnet, deploy the contracts, and do some sanity checks.
@@ -70,6 +74,27 @@ ETHERSCAN_API_KEY=<api-key> contract_address=<address> network_name=<mainnet|rin
 
 Check out the [dapp documentation](https://github.com/dapphub/dapptools/tree/master/src/dapp#dapp-verify-contract) to see how
 verifying contracts work with DappTools.
+
+## Adding contracts 
+
+If you want to add your own contract to this template, you need to update the following to make it work with the deploy scripts, you'll need to:
+1. Add the new contract to the `src` folder.
+2. Add any constructor arguments it'll want to the `helper-config.sh` file. 
+3. When you deploy, use `make deploy-rinkeby CONTRACT=<contract-name>`
+
+
+## Adding networks 
+
+To add new networks, simply add a new section in the `Makefile` like so 
+
+```bash
+# kovan
+deploy-kovan: export ETH_RPC_URL = $(call network,kovan)
+deploy-kovan: export NETWORK=kovan
+deploy-kovan: check-api-key deploy
+```
+
+And optionally add parameters to the `helper-config.sh` file. 
 
 ## Installing the toolkit
 
