@@ -19,5 +19,8 @@ jobs:
       - name: Install deps
         run: forge install
 
+      - name: Check gas snapshots
+        run: forge snapshot --check
+
       - name: Run tests
         run: FOUNDRY_PROFILE=ci forge test
