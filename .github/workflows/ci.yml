@@ -1,70 +1,23 @@
+name: CI
 on:
   push:
-    branches: 
+    branches:
       - master
   pull_request:
 
-name: Tests
-
-defaults:
-  run:
-    shell: bash
-      
-env:
-  CI: true
-  FORCE_COLOR: 2
-
-
 jobs:
-  tests:
+  run-ci:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-        with:
-           submodules: recursive
 
-      - uses: actions/setup-node@v2
-      - uses: cachix/install-nix-action@v13
-      - uses: cachix/cachix-action@v10
+      - name: Install Foundry
+        uses: onbjerg/foundry-toolchain@v1
         with:
-          name: dapp
+          version: nightly
 
-      - name: Install dependencies
-        run: nix-shell --run 'make'
-        
-      - name: Check contracts are linted
-        id: lint-check
-        run: yarn lint:check
+      - name: Install deps
+        run: forge install
 
       - name: Run tests
-        id: tests-run
-        run: nix-shell --run 'make test'
-        # Enable this if using forking tests
-        # env:
-        #  ETH_RPC_URL: https://eth-mainnet.alchemyapi.io/v2/${{ secrets.ALCHEMY_API_KEY }}
-
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-           submodules: recursive
-      - uses: actions/setup-node@v2
-      - uses: cachix/install-nix-action@v13
-      - uses: cachix/cachix-action@v10
-        with:
-          name: dapp
-
-      - name: Install dependencies
-        id: make-dependencies
-        run: nix-shell --run 'make'
-
-      - name: Build the contracts
-        id: make-build
-        run: nix-shell --run 'make build'
-
-      - name: Deploy and run checks
-        id: test-deploy
-        run: nix-shell --run './scripts/test-deploy.sh'
+        run: forge test

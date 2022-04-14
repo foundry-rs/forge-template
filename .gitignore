@@ -1,6 +1,2 @@
-# Node
-node_modules
-
-# Dapptools
+cache/
 out/
-.env
