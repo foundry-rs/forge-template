@@ -1,7 +1,0 @@
-{
-  "solidity.packageDefaultDependenciesContractsDirectory": "src",
-  "solidity.packageDefaultDependenciesDirectory": "lib",
-  "files.associations": {
-    ".dapprc": "shellscript"
-  }
-}
