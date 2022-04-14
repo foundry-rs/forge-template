@@ -20,4 +20,4 @@ jobs:
         run: forge install
 
       - name: Run tests
-        run: FOUNDRY_CONFIG=ci forge test
+        run: FOUNDRY_PROFILE=ci forge test

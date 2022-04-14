@@ -12,7 +12,8 @@ contract TestContract is Test {
         c = new Contract();
     }
 
-    function testFoo() public {
-        assertTrue(true);
+    function testFoo(uint256 x) public {
+        vm.assume(x < type(uint128).max);
+        assertEq(x + x, x * 2);
     }
 }
