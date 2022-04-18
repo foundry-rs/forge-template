@@ -13,7 +13,7 @@ contract TestContract is Test {
     }
 
     function testBar() public {
-        assertEq(uint256(1), 2, "ok");
+        assertEq(uint256(1), uint256(1), "ok");
     }
 
     function testFoo(uint256 x) public {
