@@ -5,6 +5,9 @@ on:
       - master
   pull_request:
 
+env:
+  FOUNDRY_PROFILE: ci
+
 jobs:
   run-ci:
     runs-on: ubuntu-latest
@@ -23,4 +26,4 @@ jobs:
         run: forge snapshot --check
 
       - name: Run tests
-        run: FOUNDRY_PROFILE=ci forge test
+        run: forge test
