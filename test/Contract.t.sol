@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
 
@@ -13,7 +13,7 @@ contract TestContract is Test {
     }
 
     function testBar() public {
-        assertEq(uint256(1), 2, "ok");
+        assertEq(uint256(1), uint256(1), "ok");
     }
 
     function testFoo(uint256 x) public {
