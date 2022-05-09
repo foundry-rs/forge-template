@@ -19,11 +19,8 @@ jobs:
       - name: Install deps
         run: forge install
 
-      - name: Build contracts
-        run: forge build
-
       - name: Run Slither
-        uses: crytic/slither-action@v0.1.1
+        uses: crytic/slither-action@dev-install-foundry
         id: slither
         continue-on-error: true
         with:
