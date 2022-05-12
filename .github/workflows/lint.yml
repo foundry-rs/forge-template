@@ -20,15 +20,10 @@ jobs:
         run: forge install
 
       - name: Run Slither
-        uses: crytic/slither-action@dev-install-foundry
+        uses: crytic/slither-action@main
         id: slither
         continue-on-error: true
         with:
-          # foundry-rs/foundry-toolchain@v1 will install foundry outside of the slither-action container.
-          # As a result, we need to run `forge build` before running slither, and then run slither with
-          # `ignore-compile: true`
-          # The action might eventually package Foundry: https://github.com/crytic/slither-action/issues/5
-          ignore-compile: true
           sarif: results.sarif
 
       - name: Upload SARIF file
