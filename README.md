@@ -2,7 +2,8 @@
 
 **Template repository for getting started quickly with Foundry projects**
 
-![Github Actions](https://github.com/foundry-rs/forge-template/workflows/CI/badge.svg)
+![Foundry Tests](https://github.com/foundry-rs/forge-template/workflows/Foundry Tests/badge.svg)
+![Slither Lints](https://github.com/foundry-rs/forge-template/workflows/Lints/badge.svg)
 
 ## Getting Started
 
