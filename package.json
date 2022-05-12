@@ -1,0 +1,31 @@
+{
+  "name": "@edendao/carbon-coin",
+  "author": "Cyrus of Eden (@CyrusOfEden)",
+  "license": "SEE LICENSE IN LICENSE",
+  "version": "1.0.0",
+  "description": "Carbon removal incentive design",
+  "files": [
+    "*.sol"
+  ],
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "husky": "^7.0.4",
+    "pinst": "^3.0.0",
+    "prettier": "^2.6.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "rimraf": "^3.0.2",
+    "solhint": "^3.3.7",
+    "solhint-plugin-prettier": "^0.0.5"
+  },
+  "scripts": {
+    "postinstall": "husky install",
+    "prepack": "pinst --disable",
+    "postpack": "pinst --enable",
+    "lint:fix": "yarn prettier:fix && yarn solhint:fix",
+    "lint:check": "yarn prettier:check && yarn solhint:check",
+    "prettier:fix": "yarn prettier --check \"src/**/*.sol\" --write",
+    "prettier:check": "yarn prettier --check \"src/**/*.sol\"",
+    "solhint:fix": "yarn solhint --config ./.solhint.json \"src/**/*.sol\" --fix",
+    "solhint:check": "yarn solhint --config ./.solhint.json \"src/**/*.sol\""
+  }
+}
