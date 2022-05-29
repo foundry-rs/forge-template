@@ -1,4 +1,5 @@
 @omniprotocol/=lib/omniprotocol/src/
+@carbon-coin/=src/
 @solmate/=lib/solmate/src/
 @test/=test/
 forge-std/=lib/forge-std/src/
