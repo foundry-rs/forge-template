@@ -1,5 +1,5 @@
 {
-  "name": "@edendao/carbon-coin",
+  "name": "@edendao/contracts",
   "author": "Cyrus of Eden (@CyrusOfEden)",
   "license": "SEE LICENSE IN LICENSE",
   "version": "1.0.0",
@@ -27,5 +27,6 @@
     "prettier:check": "yarn prettier --check \"src/**/*.sol\"",
     "solhint:fix": "yarn solhint --config ./.solhint.json \"src/**/*.sol\" --fix",
     "solhint:check": "yarn solhint --config ./.solhint.json \"src/**/*.sol\""
-  }
+  },
+  "dependencies": {}
 }

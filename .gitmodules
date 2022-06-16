@@ -1,9 +1,9 @@
 [submodule "lib/forge-std"]
-	path = lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
+path = lib/forge-std
+url = https://github.com/foundry-rs/forge-std
 [submodule "lib/omniprotocol"]
-	path = lib/omniprotocol
-	url = https://github.com/edendao/omniprotocol
+path = lib/omniprotocol
+url = https://github.com/edendao/omniprotocol
 [submodule "lib/solmate"]
-	path = lib/solmate
-	url = https://github.com/Rari-Capital/solmate
+path = lib/solmate
+url = https://github.com/Rari-Capital/solmate
