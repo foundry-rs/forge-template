@@ -1,6 +1,6 @@
 @omniprotocol/=lib/omniprotocol/src/
 @uniswap/=node_modules/@uniswap/
-@solmate/=lib/solmate/src/
 @contracts/=src/
 @test/=test/
 forge-std/=lib/forge-std/src/
+openzeppelin-contracts/=lib/openzeppelin-contracts/contracts/
