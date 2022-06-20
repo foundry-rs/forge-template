@@ -27,7 +27,11 @@ contract ElementalVaultTest is DSTestPlus {
         uint64 yield
     ) public {
         hevm.assume(
-            caller != address(this) && amount > 0 && yield > 0 && amount > yield
+            caller != address(this) &&
+                caller != address(0) &&
+                amount > 0 &&
+                yield > 0 &&
+                amount > yield
         );
         stETH.mint(caller, amount);
         hevm.startPrank(caller);

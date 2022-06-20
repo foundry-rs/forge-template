@@ -41,7 +41,8 @@ contract DeployTribe is Script {
             steward,
             note,
             string(abi.encodePacked("EDEN ", tribe, " DAO VAULT")),
-            string(abi.encodePacked("eden", tribe))
+            string(abi.encodePacked("eden", tribe)),
+            250
         );
     }
 }

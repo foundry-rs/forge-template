@@ -8,8 +8,9 @@ contract EdenVault is GoodVault {
         address _steward,
         address _asset,
         string memory _name,
-        string memory _symbol
-    ) GoodVault(_steward, _asset, _name, _symbol, 250) {}
+        string memory _symbol,
+        uint16 _good
+    ) GoodVault(_steward, _asset, _name, _symbol, _good) {}
 
     function afterDeposit(uint256 assets, uint256 shares) internal override {
         super.afterDeposit(assets, shares);

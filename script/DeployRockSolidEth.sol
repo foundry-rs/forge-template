@@ -6,19 +6,29 @@ import {Script} from "forge-std/Script.sol";
 import {Steward} from "@omniprotocol/Steward.sol";
 
 import {RockSolidEthAuthority} from "@contracts/authorities/RockSolidEthAuthority.sol";
+import {RockSolidEthPledge} from "@contracts/actors/RockSolidEthPledge.sol";
 import {ElementalVault} from "@contracts/vaults/ElementalVault.sol";
 
 contract DeployRockSolidEth is Script {
     function run() public {
         vm.startBroadcast();
-        run(vm.envAddress("STEWARD"), vm.envAddress("STETH"));
+        run(
+            vm.envAddress("STEWARD"),
+            vm.envAddress("stETH"),
+            vm.envAddress("edenEARTH")
+        );
         vm.stopBroadcast();
     }
 
     RockSolidEthAuthority public rsAuthority;
     ElementalVault public rsETH;
+    RockSolidEthPledge public pledge;
 
-    function run(address steward, address stETH) public {
+    function run(
+        address steward,
+        address stETH,
+        address edenEARTH
+    ) public {
         rsETH = new ElementalVault(
             steward,
             stETH,
@@ -32,5 +42,7 @@ contract DeployRockSolidEth is Script {
             address(rsETH),
             rsAuthority
         );
+
+        pledge = new RockSolidEthPledge(address(rsETH), edenEARTH);
     }
 }
