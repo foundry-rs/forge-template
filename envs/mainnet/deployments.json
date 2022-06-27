@@ -1,6 +1,7 @@
 {
   "ethereum": {
     "EarthNote": "0x38ed58a367bec07499a6394f46a95a21e4da2a64",
-    "EarthVault": "0x4ee7293f3ed490af3d1d801681f383ffe3691e6b"
+    "EarthVault": "0x4ee7293f3ed490af3d1d801681f383ffe3691e6b",
+    "LidoStakedETHVault": "0x4bf99dab15ca5da9ff6a0489509a8f196f9dff9f"
   }
 }

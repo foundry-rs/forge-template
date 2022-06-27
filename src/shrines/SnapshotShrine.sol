@@ -64,7 +64,7 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
     /// @param shares The share amount of the Champion
     /// @param merkleProof The Merkle proof showing the Champion is part of this Shrine's Merkle tree
     struct MetaShrineClaimInfo {
-        MerkleShrine metaShrine;
+        SnapshotShrine metaShrine;
         uint256 snapshotId;
         ERC20 token;
     }
