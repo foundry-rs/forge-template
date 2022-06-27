@@ -3,9 +3,9 @@ pragma solidity >=0.8.13;
 
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
-import {ERC20, GoodVault} from "./GoodVault.sol";
+import {ERC20, GoodVault} from "@contracts/mixins/GoodVault.sol";
 
-contract PledgeRebaseYieldVault is GoodVault {
+contract LidoVault is GoodVault {
     constructor(
         address _steward,
         address _asset,
@@ -14,7 +14,6 @@ contract PledgeRebaseYieldVault is GoodVault {
         uint16 _good
     ) GoodVault(_steward, _asset, _name, _symbol, _good) {}
 
-    // Keep track of total deposits to use instead of total assets for withdrawals
     uint256 public totalDeposits;
 
     function afterDeposit(uint256 assets, uint256 shares)
@@ -23,7 +22,6 @@ contract PledgeRebaseYieldVault is GoodVault {
         override
     {
         super.afterDeposit(assets, shares);
-        // Cannot realistically overflow
         unchecked {
             totalDeposits += assets;
         }
@@ -35,25 +33,18 @@ contract PledgeRebaseYieldVault is GoodVault {
         override
     {
         super.beforeWithdraw(assets, shares);
-        // Cannot realistically underflow
         unchecked {
             totalDeposits -= assets;
         }
     }
 
-    function pledgeAssets() public view returns (uint256) {
-        return totalAssets() - totalDeposits;
-    }
+    function commit(address to) external requiresAuth {
+        uint256 harvest = totalAssets() - totalDeposits;
+        uint256 dao = goodAmount(harvest);
+        uint256 give = harvest - dao;
 
-    function transferPledge(address to) external requiresAuth returns (bool) {
-        address dao = address(authority);
-        uint256 goodAssets = pledgeAssets();
-        uint256 daoAssets = goodAmount(goodAssets);
-
-        require(asset.transfer(dao, daoAssets), "TRANSFER_FAILED");
-        require(asset.transfer(to, goodAssets - daoAssets), "TRANSFER_FAILED");
-
-        return true;
+        require(asset.transfer(address(authority), dao), "TRANSFER_FAILED");
+        require(asset.transfer(to, give), "TRANSFER_FAILED");
     }
 
     function convertToShares(uint256 assets)

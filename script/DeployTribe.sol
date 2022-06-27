@@ -6,27 +6,20 @@ import {Script} from "forge-std/Script.sol";
 import {Factory} from "@omniprotocol/Factory.sol";
 import {Omnitoken} from "@omniprotocol/Omnitoken.sol";
 
-import {EdenVault} from "@contracts/vaults/EdenVault.sol";
+import {ImpactVault} from "@contracts/vaults/ImpactVault.sol";
 
 contract DeployTribe is Script {
-    function run() public {
-        vm.startBroadcast();
-        run(
-            vm.envAddress("STEWARD"),
-            vm.envAddress("FACTORY"),
-            vm.envString("TRIBE")
-        );
-        vm.stopBroadcast();
-    }
-
     Omnitoken public note;
-    EdenVault public vault;
+    ImpactVault public vault;
 
-    function run(
-        address steward,
-        address factory,
-        string memory tribe
-    ) public {
+    function run() public {
+        address owner = vm.envAddress("ETH_FROM");
+        vm.startBroadcast(owner);
+
+        address steward = vm.envAddress("STEWARD");
+        address factory = vm.envAddress("FACTORY");
+        string memory tribe = vm.envString("TRIBE");
+
         // An edn token
         note = Omnitoken(
             Factory(factory).createToken(
@@ -37,12 +30,14 @@ contract DeployTribe is Script {
             )
         );
         // A vault for their edn
-        vault = new EdenVault(
+        vault = new ImpactVault(
             steward,
-            note,
+            address(note),
             string(abi.encodePacked("EDEN ", tribe, " DAO VAULT")),
             string(abi.encodePacked("eden", tribe)),
-            250
+            500
         );
+
+        vm.stopBroadcast();
     }
 }

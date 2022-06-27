@@ -15,6 +15,29 @@ contract ERC20Snapshot is ERC20 {
         emit Snapshot(currentId);
     }
 
+    function balanceOfAt(address account, uint256 snapshotId)
+        public
+        view
+        virtual
+        returns (uint256)
+    {
+        (bool ok, uint256 value) = _valueAt(
+            snapshotId,
+            _balanceOfSnapshots[account]
+        );
+        return ok ? value : balanceOf[account];
+    }
+
+    function totalSupplyAt(uint256 snapshotId)
+        public
+        view
+        virtual
+        returns (uint256)
+    {
+        (bool ok, uint256 value) = _valueAt(snapshotId, _totalSupplySnapshots);
+        return ok ? value : totalSupply;
+    }
+
     struct Snapshots {
         uint256[] ids;
         uint256[] values;
@@ -127,28 +150,5 @@ contract ERC20Snapshot is ERC20 {
 
     function _last(uint256[] storage ns) private view returns (uint256) {
         return ns.length == 0 ? 0 : ns[ns.length - 1];
-    }
-
-    function balanceOfAt(address account, uint256 snapshotId)
-        public
-        view
-        virtual
-        returns (uint256)
-    {
-        (bool ok, uint256 value) = _valueAt(
-            snapshotId,
-            _balanceOfSnapshots[account]
-        );
-        return ok ? value : balanceOf[account];
-    }
-
-    function totalSupplyAt(uint256 snapshotId)
-        public
-        view
-        virtual
-        returns (uint256)
-    {
-        (bool ok, uint256 value) = _valueAt(snapshotId, _totalSupplySnapshots);
-        return ok ? value : totalSupply;
     }
 }

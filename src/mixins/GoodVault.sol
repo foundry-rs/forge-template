@@ -3,10 +3,11 @@ pragma solidity >=0.8.13;
 
 import {Stewarded} from "@omniprotocol/mixins/Stewarded.sol";
 import {ERC4626, ERC20} from "@omniprotocol/mixins/ERC4626.sol";
+import {Pausable} from "@omniprotocol/mixins/Pausable.sol";
 
 import {ERC20Snapshot} from "./ERC20Snapshot.sol";
 
-contract GoodVault is ERC4626, ERC20Snapshot, Stewarded {
+contract GoodVault is ERC4626, ERC20Snapshot, Pausable, Stewarded {
     uint16 public good;
     event GoodUpdated(uint16 good);
 
@@ -35,7 +36,7 @@ contract GoodVault is ERC4626, ERC20Snapshot, Stewarded {
         return (amount * good) / 10_000;
     }
 
-    // For accidentally sent tokens, only callable by authorized users
+    // For accidentally sent tokens, only callable by authorized agents
     function withdrawToken(
         address token,
         address to,
@@ -47,6 +48,24 @@ contract GoodVault is ERC4626, ERC20Snapshot, Stewarded {
 
     function totalAssets() public view virtual override returns (uint256) {
         return asset.balanceOf(address(this));
+    }
+
+    function afterDeposit(uint256 assets, uint256 shares)
+        internal
+        virtual
+        override
+        whenNotPaused
+    {
+        super.afterDeposit(assets, shares);
+    }
+
+    function beforeWithdraw(uint256 assets, uint256 shares)
+        internal
+        virtual
+        override
+        whenNotPaused
+    {
+        super.beforeWithdraw(assets, shares);
     }
 
     function _mint(address to, uint256 amount)
@@ -71,6 +90,12 @@ contract GoodVault is ERC4626, ERC20Snapshot, Stewarded {
         override(ERC20, ERC20Snapshot)
         returns (bool)
     {
+        require(
+            // transferFrom.selector
+            isAuthorized(msg.sender, 0x23b872dd) &&
+                isAuthorized(to, 0x23b872dd),
+            "UNAUTHORIZED"
+        );
         return super.transfer(to, amount);
     }
 
@@ -79,6 +104,11 @@ contract GoodVault is ERC4626, ERC20Snapshot, Stewarded {
         address to,
         uint256 amount
     ) public virtual override(ERC20, ERC20Snapshot) returns (bool) {
+        require(
+            // transferFrom.selector
+            isAuthorized(from, 0x23b872dd) && isAuthorized(to, 0x23b872dd),
+            "UNAUTHORIZED"
+        );
         return super.transferFrom(from, to, amount);
     }
 

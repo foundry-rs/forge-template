@@ -1,0 +1,9 @@
+{
+  "rinkeby": {
+    "Steward": "0xeeb56ebad4e5fff071ada7b810540a93c9b232f2",
+    "stETH": "0xa5EDb37Ec240bbbF3BB9CeC1119CDD81400b7b98",
+    "edenETH": "0x7212523d9d85db47c15694a73042f24ac47946c2",
+    "ednEARTH": "0xced6edb05b7296bd41890749bc85c084ab3eaa4f",
+    "edenEARTH": "0x5e81187e0150ed638be4a19e3d385e0ff5490ee2"
+  }
+}

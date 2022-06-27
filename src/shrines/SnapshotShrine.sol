@@ -7,20 +7,18 @@ import {ERC20, SafeTransferLib} from "@omniprotocol/libraries/SafeTransferLib.so
 import {ReentrancyGuard} from "@omniprotocol/mixins/ReentrancyGuard.sol";
 import {Stewarded} from "@omniprotocol/mixins/Stewarded.sol";
 
-/// @title Shrine
+import {ERC20Snapshot} from "../mixins/ERC20Snapshot.sol";
+
+/// @title SnapshotShrine
 /// @author zefram.eth, cyrusofeden.eth
-/// @notice A Shrine maintains a list of Champions with individual weights (shares), and anyone could
-/// offer any ERC-20 tokens to the Shrine in order to distribute them to the Champions proportional to their
-/// shares. A Champion can transfer their right to claim all future tokens offered to
+/// A Champion can transfer their right to claim all future tokens offered to
 /// the Champion to another address.
-contract MerkleShrine is Stewarded, ReentrancyGuard {
+contract SnapshotShrine is Stewarded, ReentrancyGuard {
     /// -----------------------------------------------------------------------
     /// Errors
     /// -----------------------------------------------------------------------
 
     error NotAuthorized();
-    error InvalidMerkleProof();
-    error LedgerZeroTotalShares();
 
     /// -----------------------------------------------------------------------
     /// Library usage
@@ -35,66 +33,57 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
     event Offer(address indexed sender, ERC20 indexed token, uint256 amount);
     event Claim(
         address recipient,
-        uint256 indexed version,
+        uint256 indexed snapshotId,
         ERC20 indexed token,
         address indexed champion,
         uint256 claimedTokenAmount
     );
-    event ClaimFromMetaShrine(MerkleShrine indexed metaShrine);
+    event ClaimFromMetaShrine(SnapshotShrine indexed metaShrine);
     event TransferChampionStatus(address indexed champion, address recipient);
-    event UpdateLedger(uint256 indexed newVersion, Ledger newLedger);
+    event UpdateSnapshot(uint256 indexed snapshotId);
 
     /// -----------------------------------------------------------------------
     /// Structs
     /// -----------------------------------------------------------------------
 
-    /// @param version The Merkle tree version
+    /// @param snapshotId The Merkle treesnapshotId
     /// @param token The ERC-20 token to be claimed
     /// @param champion The Champion address. If the Champion rights
     ///                 have been transferred, the tokens will be sent to its owner.
     /// @param shares The share amount of the Champion
     /// @param merkleProof The Merkle proof showing the Champion is part of this Shrine's Merkle tree
     struct ClaimInfo {
-        uint256 version;
+        uint256 snapshotId;
         ERC20 token;
         address champion;
-        uint256 shares;
-        bytes32[] merkleProof;
     }
 
     /// @param metaShrine The shrine to claim from
-    /// @param version The Merkle tree version
+    /// @param snapshotId The Merkle treesnapshotId
     /// @param token The ERC-20 token to be claimed
     /// @param shares The share amount of the Champion
     /// @param merkleProof The Merkle proof showing the Champion is part of this Shrine's Merkle tree
     struct MetaShrineClaimInfo {
         MerkleShrine metaShrine;
-        uint256 version;
+        uint256 snapshotId;
         ERC20 token;
-        uint256 shares;
-        bytes32[] merkleProof;
-    }
-
-    struct Ledger {
-        bytes32 merkleRoot;
-        uint256 totalShares;
     }
 
     /// -----------------------------------------------------------------------
     /// Storage variables
     /// -----------------------------------------------------------------------
 
-    /// @notice The current version of the ledger, starting from 1
-    uint256 public currentLedgerVersion = 1;
+    /// @notice Source
+    ERC20Snapshot public source;
 
-    /// @notice version => ledger
-    mapping(uint256 => Ledger) public ledgerOfVersion;
+    /// @notice The current snapshotId
+    uint256 public snapshotId;
 
-    /// @notice version => (token => (champion => claimedTokens))
+    /// @notice snapshotId => (token => (champion => claimedTokens))
     mapping(uint256 => mapping(ERC20 => mapping(address => uint256)))
         public claimedTokens;
 
-    /// @notice version => (token => offeredTokens)
+    /// @notice snapshotId => (token => offeredTokens)
     mapping(uint256 => mapping(ERC20 => uint256)) public offeredTokens;
 
     /// @notice champion => address
@@ -104,25 +93,16 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
     /// Initialization
     /// -----------------------------------------------------------------------
 
-    /// @notice Initialize the MerkleShrine contract.
-    /// @param steward The Shrine's initial steward, who controls the ledger
-    /// @param initialLedger The Shrine's initial ledger with the distribution shares
-    constructor(address steward, Ledger memory initialLedger) {
-        __initStewarded(steward);
+    constructor(address _steward, address _source) {
+        __initStewarded(_steward);
 
-        // 0 total shares makes no sense
-        if (initialLedger.totalShares == 0) {
-            revert LedgerZeroTotalShares();
-        }
+        source = ERC20Snapshot(_source);
+        snapshotId = source.currentSnapshot();
 
-        // the version number start at 1
-        ledgerOfVersion[1] = initialLedger;
-
-        // emit event to let indexers pick up ledger & metadata IPFS hash
-        emit UpdateLedger(1, initialLedger);
+        emit UpdateSnapshot(snapshotId);
     }
 
-    /// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     /// User actions
     /// -----------------------------------------------------------------------
 
@@ -132,7 +112,7 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
     /// @param amount The amount of tokens to offer
     function offer(ERC20 token, uint256 amount) external {
         // distribute tokens to Champions
-        offeredTokens[currentLedgerVersion][token] += amount;
+        offeredTokens[snapshotId][token] += amount;
         // transfer tokens from sender
         token.safeTransferFrom(msg.sender, address(this), amount);
 
@@ -153,36 +133,28 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
         // verify sender auth
         _verifyChampionOwnership(claimInfo.champion);
 
-        // verify Merkle proof that the champion is part of the Merkle tree
-        _verifyMerkleProof(
-            claimInfo.version,
-            claimInfo.champion,
-            claimInfo.shares,
-            claimInfo.merkleProof
-        );
-
         // compute claimable amount
-        uint256 championClaimedTokens = claimedTokens[claimInfo.version][
+        uint256 championClaimedTokens = claimedTokens[claimInfo.snapshotId][
             claimInfo.token
         ][claimInfo.champion];
         claimedTokenAmount = _computeClaimableTokenAmount(
-            claimInfo.version,
+            claimInfo.snapshotId,
             claimInfo.token,
-            claimInfo.shares,
+            source.totalSupplyAt(claimInfo.snapshotId),
             championClaimedTokens
         );
 
         // record total tokens claimed by the champion
-        claimedTokens[claimInfo.version][claimInfo.token][claimInfo.champion] =
-            championClaimedTokens +
-            claimedTokenAmount;
+        claimedTokens[claimInfo.snapshotId][claimInfo.token][
+            claimInfo.champion
+        ] = championClaimedTokens + claimedTokenAmount;
 
         // transfer tokens to the recipient
         claimInfo.token.safeTransfer(recipient, claimedTokenAmount);
 
         emit Claim(
             recipient,
-            claimInfo.version,
+            claimInfo.snapshotId,
             claimInfo.token,
             claimInfo.champion,
             claimedTokenAmount
@@ -190,38 +162,34 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
     }
 
     /// @notice A variant of {claim} that combines multiple claims for the
-    ///         same Champion & version into a single call.
+    ///         same Champion & snapshotId into a single call.
     /// @dev This is more efficient than {claimMultiple} since
     ///      it only checks Champion ownership & verifies Merkle proof once.
     function claimMultipleTokensForChampion(
         address recipient,
-        uint256 version,
+        uint256 snapshot,
         ERC20[] calldata tokenList,
         address champion,
-        uint256 shares,
-        bytes32[] calldata merkleProof
+        uint256 shares
     ) external returns (uint256[] memory claimedTokenAmountList) {
         // verify sender auth
         _verifyChampionOwnership(champion);
 
-        // verify Merkle proof that the champion is part of the Merkle tree
-        _verifyMerkleProof(version, champion, shares, merkleProof);
-
         claimedTokenAmountList = new uint256[](tokenList.length);
         for (uint256 i = 0; i < tokenList.length; i++) {
             // compute claimable amount
-            uint256 championClaimedTokens = claimedTokens[version][
+            uint256 championClaimedTokens = claimedTokens[snapshot][
                 tokenList[i]
             ][champion];
             claimedTokenAmountList[i] = _computeClaimableTokenAmount(
-                version,
+                snapshot,
                 tokenList[i],
                 shares,
                 championClaimedTokens
             );
 
             // record total tokens claimed by the champion
-            claimedTokens[version][tokenList[i]][champion] =
+            claimedTokens[snapshot][tokenList[i]][champion] =
                 championClaimedTokens +
                 claimedTokenAmountList[i];
         }
@@ -232,7 +200,7 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
 
             emit Claim(
                 recipient,
-                version,
+                snapshot,
                 tokenList[i],
                 champion,
                 claimedTokenAmountList[i]
@@ -286,23 +254,23 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
     /// -----------------------------------------------------------------------
 
     /// @notice Computes the amount of a particular ERC-20 token claimable by a Champion from
-    /// a particular version of the Merkle tree.
-    /// @param version The Merkle tree version
+    /// a particular snapshotId of the Merkle tree.
+    /// @param snapshot The Merkle treesnapshotId
     /// @param token The ERC-20 token to be claimed
     /// @param champion The Champion address
     /// @param shares The share amount of the Champion
     /// @return claimableTokenAmount The amount of tokens claimable
     function computeClaimableTokenAmount(
-        uint256 version,
+        uint256 snapshot,
         ERC20 token,
         address champion,
         uint256 shares
     ) public view returns (uint256 claimableTokenAmount) {
         claimableTokenAmount = _computeClaimableTokenAmount(
-            version,
+            snapshot,
             token,
             shares,
-            claimedTokens[version][token][champion]
+            claimedTokens[snapshot][token][champion]
         );
     }
 
@@ -312,33 +280,13 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
         return owner;
     }
 
-    /// @notice The ledger at a particular version
-    /// @param version The version of the ledger to query
-    /// @return The ledger at the specified version
-    function getLedgerOfVersion(uint256 version)
-        external
-        view
-        returns (Ledger memory)
-    {
-        return ledgerOfVersion[version];
-    }
-
     /// -----------------------------------------------------------------------
     /// Guardian actions
     /// -----------------------------------------------------------------------
 
-    /// @notice The Guardian may call this function to update the ledger, so that the list of
-    /// champions and the associated weights are updated.
-    /// @param newLedger The new Merkle tree to use for the list of champions and their shares
-    function updateLedger(Ledger calldata newLedger) external requiresAuth {
-        // 0 total shares makes no sense
-        if (newLedger.totalShares == 0) revert LedgerZeroTotalShares();
-
-        uint256 newVersion = currentLedgerVersion + 1;
-        currentLedgerVersion = newVersion;
-        ledgerOfVersion[newVersion] = newLedger;
-
-        emit UpdateLedger(newVersion, newLedger);
+    function updateSnapshot() external {
+        snapshotId = source.incrementSnapshot();
+        emit UpdateSnapshot(snapshotId);
     }
 
     /// -----------------------------------------------------------------------
@@ -361,38 +309,15 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
         }
     }
 
-    /// @dev Reverts if the champion is not part of the Merkle tree
-    /// @param version The Merkle tree version
-    /// @param champion The Champion address. If the Champion rights
-    ///                 have been transferred, the tokens will be sent to its owner.
-    /// @param shares The share amount of the Champion
-    /// @param merkleProof The Merkle proof showing the Champion is part of this Shrine's Merkle tree
-    function _verifyMerkleProof(
-        uint256 version,
-        address champion,
-        uint256 shares,
-        bytes32[] calldata merkleProof
-    ) internal view {
-        if (
-            !MerkleProof.verify(
-                merkleProof,
-                ledgerOfVersion[version].merkleRoot,
-                keccak256(abi.encodePacked(champion, shares))
-            )
-        ) {
-            revert InvalidMerkleProof();
-        }
-    }
-
     /// @dev See {computeClaimableTokenAmount}
     function _computeClaimableTokenAmount(
-        uint256 version,
+        uint256 snapshot,
         ERC20 token,
         uint256 shares,
         uint256 claimedTokenAmount
     ) internal view returns (uint256 claimableTokenAmount) {
-        uint256 totalShares = ledgerOfVersion[version].totalShares;
-        uint256 offeredTokenAmount = (offeredTokens[version][token] * shares) /
+        uint256 totalShares = source.totalSupplyAt(snapshot);
+        uint256 offeredTokenAmount = (offeredTokens[snapshot][token] * shares) /
             totalShares;
 
         // rounding may cause (offeredTokenAmount < claimedTokenAmount)
@@ -412,11 +337,9 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
         claimInfo.metaShrine.claim(
             address(this),
             ClaimInfo({
-                version: claimInfo.version,
+                snapshotId: claimInfo.snapshotId,
                 token: claimInfo.token,
-                champion: address(this),
-                shares: claimInfo.shares,
-                merkleProof: claimInfo.merkleProof
+                champion: address(this)
             })
         );
         claimedTokenAmount =
@@ -424,9 +347,7 @@ contract MerkleShrine is Stewarded, ReentrancyGuard {
             beforeBalance;
 
         // distribute tokens to Champions
-        offeredTokens[currentLedgerVersion][
-            claimInfo.token
-        ] += claimedTokenAmount;
+        offeredTokens[snapshotId][claimInfo.token] += claimedTokenAmount;
 
         emit Offer(
             address(claimInfo.metaShrine),
