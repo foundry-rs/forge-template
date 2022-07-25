@@ -1,2 +1,2 @@
-[ci]
+[profile.ci]
 fuzz-runs = 10_000
