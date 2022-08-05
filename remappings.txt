@@ -1,5 +1,4 @@
 @omniprotocol/=lib/omniprotocol/src/
-@uniswap/=node_modules/@uniswap/
 @contracts/=src/
 @test/=test/
 forge-std/=lib/forge-std/src/
