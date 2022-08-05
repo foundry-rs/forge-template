@@ -33,7 +33,8 @@ contract ProgressiveQuadraticVault is ERC4626, Arctan {
             arctan((sumOfRoots * velocity) / 10_000);
     }
 
-    function afterDeposit(uint256, uint256 shares) internal override {
+    function afterDeposit(uint256 assets, uint256 shares) internal override {
+        super.afterDeposit(assets, shares);
         uint256 sharesAfter = balanceOf[msg.sender];
         unchecked {
             uint256 sharesBefore = sharesAfter - shares;
@@ -41,7 +42,8 @@ contract ProgressiveQuadraticVault is ERC4626, Arctan {
         }
     }
 
-    function beforeWithdraw(uint256, uint256 shares) internal override {
+    function beforeWithdraw(uint256 assets, uint256 shares) internal override {
+        super.beforeWithdraw(assets, shares);
         uint256 sharesBefore = balanceOf[msg.sender];
         require(shares <= sharesBefore - commitmentOf(msg.sender), "INVARIANT");
         unchecked {
