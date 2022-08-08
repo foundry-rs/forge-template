@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity >=0.8.13;
 
-import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
-
 import {ERC20, GoodVault} from "@contracts/mixins/GoodVault.sol";
 
 contract LidoVault is GoodVault {
