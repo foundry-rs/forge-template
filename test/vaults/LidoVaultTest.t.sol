@@ -7,13 +7,13 @@ import {MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
 import {Steward} from "@omniprotocol/Steward.sol";
 
-import {LidoVault} from "@contracts/vaults/LidoVault.sol";
+import {RebaseVault} from "@contracts/vaults/RebaseVault.sol";
 
-contract LidoVaultTest is DSTestPlus {
+contract RebaseVaultTest is DSTestPlus {
     Steward public steward = new Steward(address(this), address(this));
     MockERC20 public stETH = new MockERC20("stETH", "stETH", 18);
-    LidoVault public edenETH =
-        new LidoVault(
+    RebaseVault public edenETH =
+        new RebaseVault(
             address(steward),
             address(stETH),
             "ROCK SOLID ETH",

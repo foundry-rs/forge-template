@@ -26,20 +26,25 @@ contract ProgressiveQuadraticVault is ERC4626, Arctan {
     function totalAssets() public view override returns (uint256) {
         return asset.balanceOf(address(this));
     }
-    
-    function commit(address to) external requiresAuth {
-        uint256 commitment = ((totalSupply() * 100000000000) / 1727108826179) * arctan((sumOfRoots * velocity) / 10_000);
-        uint256 dao = goodAmount(commitment);
-        uint256 give = commitment - dao;
 
-        require(asset.transfer(address(authority), dao), "TRANSFER_FAILED");
-        require(asset.transfer(to, give), "TRANSFER_FAILED");
+    function commitmentArc() public view returns (uint256) {
+        return arctan((sumOfRoots * velocity) / 10_000);
+    }
+
+    function commitment() public view returns (uint256) {
+        return
+            (totalSupply * commitmentArc()).mulDivDown(
+                1000000000000,
+                1727108826179
+            );
     }
 
     function commitmentOf(address account) public view returns (uint256) {
         return
-            ((balanceOf[account] * 100000000000) / 1727108826179) *
-            arctan((sumOfRoots * velocity) / 10_000);
+            (balanceOf[account] * commitmentArc()).mulDivUp(
+                1000000000000,
+                1727108826179
+            );
     }
 
     function afterDeposit(uint256 assets, uint256 shares) internal override {
