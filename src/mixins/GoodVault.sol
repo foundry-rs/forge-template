@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity >=0.8.13;
 
-import {Stewarded} from "@omniprotocol/mixins/Stewarded.sol";
 import {ERC4626, ERC20} from "@omniprotocol/mixins/ERC4626.sol";
 import {Pausable} from "@omniprotocol/mixins/Pausable.sol";
+import {Stewarded} from "@omniprotocol/mixins/Stewarded.sol";
 
 import {ERC20Snapshot} from "./ERC20Snapshot.sol";
 

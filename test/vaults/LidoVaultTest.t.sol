@@ -10,7 +10,7 @@ import {Steward} from "@omniprotocol/Steward.sol";
 import {RebaseVault} from "@contracts/vaults/RebaseVault.sol";
 
 contract RebaseVaultTest is DSTestPlus {
-    Steward public steward = new Steward(address(this), address(this));
+    Steward public steward = new Steward(address(this));
     MockERC20 public stETH = new MockERC20("stETH", "stETH", 18);
     RebaseVault public edenETH =
         new RebaseVault(

@@ -10,7 +10,7 @@ import {Steward} from "@omniprotocol/Steward.sol";
 import {ProgressiveQuadraticVault} from "@contracts/vaults/ProgressiveQuadraticVault.sol";
 
 contract ProgressiveQuadraticVaultTest is DSTestPlus {
-    Steward public steward = new Steward(address(this), address(this));
+    Steward public steward = new Steward(address(this));
     MockERC20 public usdc = new MockERC20("usdc", "usdc", 18);
     ProgressiveQuadraticVault public qf =
         new ProgressiveQuadraticVault(
