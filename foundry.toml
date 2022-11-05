@@ -1,11 +1,11 @@
 # Full reference
 # https://book.getfoundry.sh/reference/config.html
-[default]
+[profile.default]
 solc_version = "0.8.13"
 optimizer = true
 optimizer_runs = 20000
 gas_reports = ["*"]
 
-[ci]
+[profile.ci]
 verbosity = 4
 fuzz_runs = 65536

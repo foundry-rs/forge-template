@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity >=0.8.11;
 
-import {MerkleProof} from "openzeppelin-contracts/utils/cryptography/MerkleProof.sol";
-
 import {ERC20, SafeTransferLib} from "@omniprotocol/libraries/SafeTransferLib.sol";
 import {ReentrancyGuard} from "@omniprotocol/mixins/ReentrancyGuard.sol";
 import {Stewarded} from "@omniprotocol/mixins/Stewarded.sol";
@@ -46,12 +44,11 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
     /// Structs
     /// -----------------------------------------------------------------------
 
-    /// @param snapshotId The Merkle treesnapshotId
+    /// @param snapshotId The snapshotId
     /// @param token The ERC-20 token to be claimed
     /// @param champion The Champion address. If the Champion rights
     ///                 have been transferred, the tokens will be sent to its owner.
-    /// @param shares The share amount of the Champion
-    /// @param merkleProof The Merkle proof showing the Champion is part of this Shrine's Merkle tree
+
     struct ClaimInfo {
         uint256 snapshotId;
         ERC20 token;
@@ -59,10 +56,8 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
     }
 
     /// @param metaShrine The shrine to claim from
-    /// @param snapshotId The Merkle treesnapshotId
+    /// @param snapshotId The snapshotId
     /// @param token The ERC-20 token to be claimed
-    /// @param shares The share amount of the Champion
-    /// @param merkleProof The Merkle proof showing the Champion is part of this Shrine's Merkle tree
     struct MetaShrineClaimInfo {
         SnapshotShrine metaShrine;
         uint256 snapshotId;
@@ -106,6 +101,7 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
     /// User actions
     /// -----------------------------------------------------------------------
 
+    // TODO: Update below notice to reflect structure
     /// @notice Offer ERC-20 tokens to the MerkleShrine and distribute them to Champions proportional
     /// to their shares in the Shrine. Callable by anyone.
     /// @param token The ERC-20 token being offered to the Shrine
@@ -119,9 +115,11 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
         emit Offer(msg.sender, token, amount);
     }
 
+    // TODO: Update below notice to reflect structure
     /// @notice A Champion or the owner of a Champion may call this to
     ///         claim their share of the tokens offered to this Shrine.
     /// Requires a Merkle proof to prove that the Champion is part of this Shrine's Merkle tree.
+    // TODO: what kind of proof does it need now?
     /// Only callable by the champion (if the right was never transferred) or the owner
     /// (that the original champion transferred their rights to)
     /// @param claimInfo The info of the claim
@@ -208,6 +206,7 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
         }
     }
 
+    // TODO: Update below notice to reflect structure
     /// @notice If this MerkleShrine is a Champion of another MerkleShrine (MetaShrine),
     ///         calling this can claim the tokens
     /// from the MetaShrine and distribute them to this Shrine's Champions. Callable by anyone.
@@ -254,8 +253,7 @@ contract SnapshotShrine is Stewarded, ReentrancyGuard {
     /// -----------------------------------------------------------------------
 
     /// @notice Computes the amount of a particular ERC-20 token claimable by a Champion from
-    /// a particular snapshotId of the Merkle tree.
-    /// @param snapshot The Merkle treesnapshotId
+    /// @param snapshot The snapshotId
     /// @param token The ERC-20 token to be claimed
     /// @param champion The Champion address
     /// @param shares The share amount of the Champion
