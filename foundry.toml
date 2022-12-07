@@ -1,2 +1,2 @@
-[ci]
-fuzz-runs = 10_000
+[profile.ci.fuzz]
+runs = 10_000
