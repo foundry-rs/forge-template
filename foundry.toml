@@ -1,3 +1,2 @@
-[profile.ci]
-[fuzz]
+[profile.ci.fuzz]
 runs = 10_000
