@@ -3,7 +3,10 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-remappings = ['@openzeppelin/contracts/=lib/openzeppelin/contracts/']
+remappings = [
+    '@openzeppelin/contracts/=lib/openzeppelin/contracts/', 
+    '@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/'
+    ]
 
 [profile.ci.fuzz]
 runs = 10_000
