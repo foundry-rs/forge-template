@@ -122,6 +122,6 @@ Contributions: [Hans](https://twitter.com/hansfriese), @tamjid0x01
 Links: 
 - [Solodit's Aggregated Smart Contract Audit Checklist](https://github.com/Cyfrin/audit-checklist/tree/main)
 - [Trail of Bits' Token Integration Checklist](https://secure-contracts.com/development-guidelines/token_integration.html#token-integration-checklist)
-- [Solodit's Checlist](https://solodit.xyz/checklist)
+- [Solodit's Checklist](https://solodit.xyz/checklist)
 - [tamjid0x01's Checklist](https://github.com/tamjid0x01/SmartContracts-audit-checklist#general-review-approach)
 - [JP's checlist [PENDING](https://www.notion.so/Attack-Vectors-c387ea83559148f7a296a8a298e4ae49?pvs=4)
