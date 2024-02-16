@@ -68,106 +68,55 @@
   - [ ] Summing vs separate calculation [Reference](https://github.com/sherlock-audit/2022-11-isomorph-judging/issues
 
 - [ ] **Defi**
-  - [ ] Oracle: Usage of deprecated chainlink functions
-    - latestRoundData() might return stale or incorrect results
-    - [Reference](https://github.com/code-423n4/2022-04-backd-findings/issues/17)
-  - [ ] Oracle: twap period
-    - Oracle's period is very low allowing the twap price to be manipulated
-    - [Reference](https://github.com/code-423n4/2022-06-canto-v2-findings/issues/124)
-  - [ ] Hard-coded slippage
-    - Hard-coded slippage may freeze user funds during market turbulence
-    - [Reference](https://github.com/code-423n4/2022-05-sturdy-findings/issues/133)
-  - [ ] Validate reserve
-    - Protocol reserve can be lent out
-    - [Reference](https://github.com/sherlock-audit/2022-08-sentiment-judging/blob/main/122-M/1-report.md)
-  - [ ] ETH 2.0 reward slashing
-    - [Reference](https://solodit.xyz/issues/5924)
-  - [ ] Check flashloan attack during stake/unstake
-    - Attackers can steal staking rewards using via flashloan
-  - [ ] Check deadline during trading
-    - Recommend checking deadline
-    - [Reference](https://solodit.xyz/issues/6297)
-  - [ ] Should add an interest during LTV calculation
-    - [Reference](https://solodit.xyz/issues/6644)
-  - [ ] Use twap instead of raw value
-    - [Reference](https://solodit.xyz/issues/6647)
-  - [ ] Liquidation/repaying should be enabled/disabled together
-    - [Reference](https://solodit.xyz/issues/6649)
-  - [ ] Liquidation should work after frontrunning by borrower
-    - liqAmount might be decreased by borrower using frontrunning
-    - [Reference](https://solodit.xyz/issues/7364)
-  - [ ] Defi functions should have deadline like Uniswap
-    - [Reference](https://solodit.xyz/issues/6687)
+  - [ ] Oracle: Usage of deprecated chainlink functions - latestRoundData() might return stale or incorrect results [Reference](https://github.com/code-423n4/2022-04-backd-findings/issues/17)
+  - [ ] Oracle: twap period - Oracle's period is very low allowing the twap price to be manipulated [Reference](https://github.com/code-423n4/2022-06-canto-v2-findings/issues/124)
+  - [ ] Hard-coded slippage - Hard-coded slippage may freeze user funds during market turbulence [Reference](https://github.com/code-423n4/2022-05-sturdy-findings/issues/133)
+  - [ ] Validate reserve - Protocol reserve can be lent out [Reference](https://github.com/sherlock-audit/2022-08-sentiment-judging/blob/main/122-M/1-report.md)
+  - [ ] ETH 2.0 reward slashing [Reference](https://solodit.xyz/issues/5924)
+  - [ ] Check flashloan attack during stake/unstake - Attackers can steal staking rewards using via flashloan
+  - [ ] Check deadline during trading - Recommend checking deadline [Reference](https://solodit.xyz/issues/6297)
+  - [ ] Should add an interest during LTV calculation [Reference](https://solodit.xyz/issues/6644)
+  - [ ] Use twap instead of raw value [Reference](https://solodit.xyz/issues/6647)
+  - [ ] Liquidation/repaying should be enabled/disabled together [Reference](https://solodit.xyz/issues/6649)
+  - [ ] Liquidation should work after frontrunning by borrower - liqAmount might be decreased by borrower using frontrunning [Reference](https://solodit.xyz/issues/7364)
+  - [ ] Defi functions should have deadline like Uniswap [Reference](https://solodit.xyz/issues/6687)
 
 - [ ] **Flashloan**
-  - [ ] Checkpoint faking
-    - OpenZepplin checkpoint works with block number that can be faked with flashloan
+  - [ ] Checkpoint faking - OpenZepplin checkpoint works with block number that can be faked with flashloan
   - [ ] Disable withdraw in the same block
-  - [ ] ERC4626 flashloan manipulation
-    - [Reference](https://github.com/code-423n4/2022-01-behodler-findings/issues/304)
+  - [ ] ERC4626 flashloan manipulation [Reference](https://github.com/code-423n4/2022-01-behodler-findings/issues/304)
 
 - [ ] **ERC20**
-  - [ ] Fee-on-transfer token
-    - Best practice - check before/after balance
-    - [Reference](https://solodit.xyz/issues/3630)
-  - [ ] ERC777 - tokens with hooks
-    - Best practice - Check Effect Interaction pattern
-    - [Reference](https://solodit.xyz/issues/3627)
-  - [ ] Multi-addresses token
-    - Best practice - check before/after balance of that address, no compare address
-  - [ ] Return value of transfer/approve
-    - Best practice - safeERC20 of OpenZepplin
-  - [ ] Revert on zero transfer
-    - [Reference](https://github.com/code-423n4/2022-05-sturdy-findings/issues/79)
-  - [ ] Revert to address(0)
-    - [Reference](https://github.com/code-423n4/2022-07-yield-findings/issues/116)
-  - [ ] solmate's SafeTransferLib
-    - solmate's SafeTransferLib doesn't check if the token is a contract
-    - [Reference](https://github.com/code-423n4/2022-05-cally-findings/issues/225)
-  - [ ] safeapprove()
-    - safeapprove() must first be approved by zero
-    - [Reference](https://github.com/code-423n4/2022-04-backd-findings/issues/180)
+  - [ ] Fee-on-transfer token - Best practice - check before/after balance [Reference](https://solodit.xyz/issues/3630)
+  - [ ] ERC777 - tokens with hooks - Best practice - Check Effect Interaction pattern [Reference](https://solodit.xyz/issues/3627)
+  - [ ] Multi-addresses token - Best practice - check before/after balance of that address, no compare address
+  - [ ] Return value of transfer/approve - Best practice - safeERC20 of OpenZepplin
+  - [ ] Revert on zero transfer [Reference](https://github.com/code-423n4/2022-05-sturdy-findings/issues/79)
+  - [ ] Revert to address(0) [Reference](https://github.com/code-423n4/2022-07-yield-findings/issues/116)
+  - [ ] solmate's SafeTransferLib - solmate's SafeTransferLib doesn't check if the token is a contract [Reference](https://github.com/code-423n4/2022-05-cally-findings/issues/225)
+  - [ ] safeapprove() - safeapprove() must first be approved by zero [Reference](https://github.com/code-423n4/2022-04-backd-findings/issues/180)
   - [ ] should approve before swap
-  - [ ] Revert on Approve Max
-    - [Reference](https://solodit.xyz/issues/3521)
-  - [ ] transferfrom() shouldn't decrease allowance if from = caller
-    - [Reference](https://solodit.xyz/issues/6704)
+  - [ ] Revert on Approve Max [Reference](https://solodit.xyz/issues/3521)
+  - [ ] transferfrom() shouldn't decrease allowance if from = caller [Reference](https://solodit.xyz/issues/6704)
 
 - [ ] **ERC721/1155**
-  - [ ] Make sure supportsInterface succeeds
-    - Contract should return true for supportsInterface call
-    - [Reference](https://solodit.xyz/issues/703)
-  - [ ] Support both ERC721 and ERC1155
-    - Use supportsInterface in order of 1155/721 to support both
-    - [Reference](https://solodit.xyz/issues/2772)
+  - [ ] Make sure supportsInterface succeeds- Contract should return true for supportsInterface call [Reference](https://solodit.xyz/issues/703)
+  - [ ] Support both ERC721 and ERC1155 - Use supportsInterface in order of 1155/721 to support both [Reference](https://solodit.xyz/issues/2772)
   - [ ] Free NFT ownership is dangerous for airdrop
-  - [ ] Allowance logic for CryptoPunks are frontrunable
-    - Should check the owner for CryptoPunks
-    - [Reference](https://solodit.xyz/issues/6289)
+  - [ ] Allowance logic for CryptoPunks are frontrunable - Should check the owner for CryptoPunks [Reference](https://solodit.xyz/issues/6289)
 
 - [ ] **ERC4626**
-  - [ ] Initial Deposit Issue
-    - Mint some initial tokens and save the initial shares as a permanent reserve
-    - [Reference](https://solodit.xyz/issues/3474)
-  - [ ] First Depositor Issue
-    - First depositor can break minting of shares
-    - [Reference](https://github.com/code-423n4/2022-04-jpegd-findings/issues/12)
-  - [ ] EIP4626 decimals
-    - EIP4626 can have different decimals from the underlying token
-    - [Reference](https://github.com/sherlock-audit/2022-08-sentiment-judging/blob/main/025-H/025-h.md)
+  - [ ] Initial Deposit Issue - Mint some initial tokens and save the initial shares as a permanent reserve [Reference](https://solodit.xyz/issues/3474)
+  - [ ] First Depositor Issue - First depositor can break minting of shares [Reference](https://github.com/code-423n4/2022-04-jpegd-findings/issues/12)
+  - [ ] EIP4626 decimals - EIP4626 can have different decimals from the underlying token [Reference](https://github.com/sherlock-audit/2022-08-sentiment-judging/blob/main/025-H/025-h.md)
 
 - [ ] **Misc.**
-  - [ ] block.number is inconsistent in Ethereum/Optimism/Arbitrum
-    - [Reference](https://solodit.xyz/issues/6345)
-  - [ ] There should be some delay to activate proposal
-    - [Reference](https://solodit.xyz/issues/3213)
-  - [ ] Check code asymmetries
-    - Check create/delete, deposit/withdraw patterns
+  - [ ] block.number is inconsistent in Ethereum/Optimism/Arbitrum [Reference](https://solodit.xyz/issues/6345)
+  - [ ] There should be some delay to activate proposal [Reference](https://solodit.xyz/issues/3213)
+  - [ ] Check code asymmetries - Check create/delete, deposit/withdraw patterns
   - [ ] LibClone's clone function generates ETH receive() automatically
-  - [ ] There should be a removal logic for bad controllers
-    - [Reference](https://solodit.xyz/issues/7157)
-  - [ ] The contract should be able to withdraw airdrops if any
-    - [Reference](https://solodit.xyz/issues/9624)
+  - [ ] There should be a removal logic for bad controllers [Reference](https://solodit.xyz/issues/7157)
+  - [ ] The contract should be able to withdraw airdrops if any [Reference](https://solodit.xyz/issues/9624)
 ---
 Contributions: [Hans](https://twitter.com/hansfriese), @tamjid0x01
 Links: 
